@@ -10,21 +10,13 @@ ZMQ_VERSION=$(< "$DIR/zmq_version")
 FILE_NAME="zeromq-$ZMQ_VERSION"
 TARBALL="$FILE_NAME.tar.gz"
 ZMQ_URL="http://download.zeromq.org/$TARBALL"
-TMP=/tmp
 DST=/usr/local
 COMMAND=$(cat <<EOF
-cd $TMP &&
-wget $ZMQ_URL &&
-tar -xf $TARBALL &&
+wget $ZMQ_URL | tar -xf $TARBALL &&
 rm -rf $TARBALL &&
 cd $FILE_NAME &&
-mkdir dist &&
-./configure --prefix=$TMP/$FILE_NAME/dist &&
-make install &&
-cp -rf dist/include/* $DST/include/ &&
-cp -rf dist/share/* $DST/share/ &&
-cp -rf dist/lib/* $DST/lib/ &&
-rm -rf $TMP/$FILE_NAME
+./configure --prefix=$DST &&
+make && make install &&
 EOF
 )
 
