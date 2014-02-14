@@ -1,0 +1,33 @@
+#!/bin/bash
+
+APP="$1"
+IMAGE="app/$APP"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+set -e
+echo "-----> Injecting ØMQ ..."
+ZMQ_VERSION=$(< "$DIR/zmq_version")
+FILE_NAME="zeromq-$ZMQ_VERSION"
+TARBALL="$FILE_NAME.tar.gz"
+ZMQ_URL="http://download.zeromq.org/$TARBALL"
+TMP=/tmp
+DST=/usr/local
+COMMAND=$(cat <<EOF
+cd $TMP &&
+wget $ZMQ_URL &&
+tar -xf $TARBALL &&
+rm -rf $TARBALL &&
+cd $FILE_NAME &&
+mkdir dist &&
+./configure --prefix=$TMP/$FILE_NAME/dist &&
+make install &&
+cp -rf dist/include/* $DST/include/ &&
+cp -rf dist/share/* $DST/share/ &&
+cp -rf dist/lib/* $DST/lib/ &&
+rm -rf $TMP/$FILE_NAME
+EOF
+)
+
+id=$(docker run -d $IMAGE /bin/bash -c "$COMMAND")
+test $(docker wait $id) -eq 0
+docker commit $id $IMAGE > /dev/null
