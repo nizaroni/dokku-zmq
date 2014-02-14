@@ -16,7 +16,8 @@ wget $ZMQ_URL | tar -xf $TARBALL &&
 rm -rf $TARBALL &&
 cd $FILE_NAME &&
 ./configure --prefix=$DST &&
-make && make install &&
+make &&
+make install
 EOF
 )
 
