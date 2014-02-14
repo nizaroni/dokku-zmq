@@ -8,16 +8,17 @@ set -e
 echo "-----> Injecting ØMQ ..."
 ZMQ_VERSION=$(< "$DIR/zmq_version")
 FILE_NAME="zeromq-$ZMQ_VERSION"
-TARBALL="$FILE_NAME.tar.gz"
-ZMQ_URL="http://download.zeromq.org/$TARBALL"
+ZMQ_URL="http://download.zeromq.org/$FILE_NAME.tar.gz"
 DST=/usr/local
 COMMAND=$(cat <<EOF
-wget $ZMQ_URL | tar -xzf $TARBALL &&
-rm -rf $TARBALL &&
+curl $ZMQ_URL | tar -xz &&
 cd $FILE_NAME &&
 ./configure --prefix=$DST &&
 make &&
-make install
+make install &&
+ldconfig &&
+cd .. &&
+rm -rf $FILE_NAME
 EOF
 )
 
