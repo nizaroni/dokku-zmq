@@ -12,7 +12,7 @@ TARBALL="$FILE_NAME.tar.gz"
 ZMQ_URL="http://download.zeromq.org/$TARBALL"
 DST=/usr/local
 COMMAND=$(cat <<EOF
-wget $ZMQ_URL | tar -xf $TARBALL &&
+wget $ZMQ_URL | tar -xzf $TARBALL &&
 rm -rf $TARBALL &&
 cd $FILE_NAME &&
 ./configure --prefix=$DST &&
