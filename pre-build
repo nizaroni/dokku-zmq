@@ -11,16 +11,15 @@ FILE_NAME="zeromq-$ZMQ_VERSION"
 ZMQ_URL="http://download.zeromq.org/$FILE_NAME.tar.gz"
 DST=/usr/local
 COMMAND=$(cat <<EOF
-curl $ZMQ_URL | tar -xz &&
-cd $FILE_NAME &&
-./configure --prefix=$DST &&
-make &&
-make install &&
-ldconfig &&
-cd .. &&
-rm -rf $FILE_NAME
-EOF
-)
+    curl $ZMQ_URL | tar -xz &&
+    cd $FILE_NAME &&
+    ./configure --prefix=$DST &&
+    make &&
+    make install &&
+    ldconfig &&
+    cd .. &&
+    rm -rf $FILE_NAME
+EOF)
 
 id=$(docker run -d $IMAGE /bin/bash -c "$COMMAND")
 test $(docker wait $id) -eq 0
